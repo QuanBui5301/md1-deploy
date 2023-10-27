@@ -1,0 +1,96 @@
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<!------ Include the above in your HEAD tag ---------->
+<link href="login.css" rel="stylesheet" id="bootstrap4-css">
+<body onload="error()">
+<div class="wrapper fadeInDown">
+    <div id="formContent">
+        <!-- Tabs Titles -->
+
+        <!-- Icon -->
+        <div class="fadeIn first">
+            <img src="OIG.jpeg" id="icon" alt="User Icon" />
+        </div>
+
+        <!-- Login Form -->
+        <form>
+            <label id="EmailError" style="color: red"></label>
+            <input type="text" id="email" class="fadeIn second" name="login" placeholder="login">
+            <label id="PassError" style="color: red"></label>
+            <input type="password" id="password" class="fadeIn third" name="login" placeholder="password">
+            <label id="Error" style="color: red"></label>
+            <br>
+            <button type="button" class="btnSubmit" id="btnSubmit" disabled>Log In</button>
+        </form>
+
+        <!-- Remind Passowrd -->
+        <div id="formFooter">
+            <a class="underlineHover" href="#">Forgot Password?</a>
+        </div>
+
+    </div>
+</div>
+<script src="User.js"></script>
+<script>
+    let key = ["email", "password"]
+    let keyLabel = ["EmailError", "PassError"]
+    let dataUser = JSON.parse(localStorage.getItem("user"))
+    let list_user = []
+    if (dataUser == null) {
+        list_user = []
+    }
+    else {
+        for (let i = 0; i < dataUser.length; i++) {
+            list_user[i] = dataUser[i]
+        }
+    }
+    function check() {
+        for (let i = 0; i < key.length; i++) {
+            if (document.getElementById(key[i]).value === "") {
+                document.getElementById(keyLabel[i]).innerText = "This section cannot be left blank!"
+            } else {
+                document.getElementById(keyLabel[i]).innerText = ""
+                if (i === 0) {
+                    if (isValidEmail(document.getElementById(key[i]).value)) {
+                        document.getElementById(keyLabel[i]).innerText = ""
+                    } else {
+                        document.getElementById(keyLabel[i]).innerText = "Invalid email!"
+                    }
+                }
+            }
+        }
+        if (document.getElementById(keyLabel[0]).innerText === "" && document.getElementById(keyLabel[1]).innerText === "") {
+            document.getElementById('btnSubmit').disabled = false
+        }
+        else {
+            document.getElementById('btnSubmit').disabled = true
+        }
+    }
+    document.getElementById('btnSubmit').onclick = function () {
+        if (!document.getElementById('btnSubmit').disabled) {
+            let email = document.getElementById('email').value
+            let password = document.getElementById('password').value
+            for (let i = 0; i < list_user.length; i++) {
+                if (email === list_user[i].email && password === list_user[i].password) {
+                    document.getElementById("Error").innerText = ""
+                    document.getElementById('email').value = ""
+                    document.getElementById('password').value = ""
+                    localStorage.setItem("username", list_user[i].username)
+                    window.location.href = "CrudStudent.html"
+                }
+                if (i === list_user.length-1) {
+                    document.getElementById("Error").innerText = "Login information is incorrect"
+                }
+            }
+        }
+    }
+    function error() {
+        window.addEventListener("input", check)
+    }
+    function isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+
+</script>
+</body>
+
