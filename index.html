@@ -8,6 +8,29 @@
     <title>CrudStudent</title>
 </head>
 <body style="text-align: center">
+<style>
+    .buttons {
+        margin-top: 30px;
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+    }
+    .buttons button {
+        border: none;
+        margin-bottom: 20px;
+        padding: 0.4rem 1.2rem;
+        background-color: red;
+        border-radius: 10%;
+        color: white;
+    }
+    #page_number {
+        margin-bottom: 20px;
+        text-align: center;
+        width: 3rem;
+        border-radius: 10%;
+        background-color: #ffffff;
+    }
+</style>
 <nav class="navbar navbar-expand-lg navbar-light bg-primary">
     <a class="navbar-brand" href="#">CrudStudent</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -233,7 +256,7 @@
 </div>
 <!--<input type="text" id="search" style="width: 500px" placeholder="Search Student">-->
 <button style="background: deepskyblue; color: brown; width: 50px" onclick="search_name()"><i class="fas fa-search"></i></button>
-<button style="background: #00ff0d; color: #ffffff; width: 50px" onclick="show_table(list_student)"><i class="fas fa-eye"></i></button>
+<button style="background: #00ff0d; color: #ffffff; width: 50px" onclick="show_table(list_student.slice(0,3))"><i class="fas fa-eye"></i></button>
 <button style="background: #ff0000; color: #ffffff; width: 50px" onclick="close_table()"><i class="fas fa-eye-slash"></i></button>
 <br>
 <br>
@@ -293,7 +316,13 @@
 <table id="table" style="width: 1269px;">
 
 </table>
-
+<br>
+<br>
+<div class="buttons">
+    <button onclick="perviousPage()" id="prev">Prev</button>
+    <input type="text" id="page_number" value="1">
+    <button onclick="nextPage()" id="next">Next</button>
+</div>
 <script src="Student.js"></script>
 <script src="upload.js"></script>
 <script>
@@ -348,6 +377,32 @@ closeIconBtn.onclick = function () {
 }
 closeSearchBtn.onclick = function () {
     search.style.display = "none"
+}
+let elementPerPage = 3;
+let start = 0
+let end = 3
+let pageNumber = 1
+function nextPage() {
+    if (end < list_student.length) {
+        start += elementPerPage
+        end += elementPerPage
+        pageNumber += 1
+    }
+    document.getElementById('page_number').value = pageNumber
+    show_table(list_student.slice(start,end))
+}
+function perviousPage() {
+    if (start <= elementPerPage) {
+        start = 0
+        end = elementPerPage
+        pageNumber = 1
+    } else {
+        start -= elementPerPage
+        end -= elementPerPage
+        pageNumber -= 1
+    }
+    document.getElementById('page_number').value = pageNumber
+    show_table(list_student.slice(start,end))
 }
 function add_student() {
     modal.style.display = "block"
@@ -582,7 +637,7 @@ function update_student(id) {
                         list_student[i]._audio = updateAudio
                         let data = JSON.stringify(list_student)
                         localStorage.setItem("data", data)
-                        show_table(list_student)
+                        show_table(list_student.slice(i, i+1))
                     }
                 }
             }
