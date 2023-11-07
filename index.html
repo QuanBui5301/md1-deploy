@@ -2,6 +2,7 @@
 <html lang="en">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
 <head>
     <meta charset="UTF-8">
     <title>CrudStudent</title>
@@ -36,6 +37,10 @@
                 <a class="nav-link disabled" href="#">Disabled</a>
             </li>
         </ul>
+        <img src="" id="iconSet" style="border-radius: 50%; width: 50px; height: 50px"><script>
+        document.getElementById("iconSet").src = localStorage.getItem("icon")
+    </script>
+        <h1>&nbsp;</h1>
         <form class="form-inline my-2 my-lg-0">
             <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
@@ -50,7 +55,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">Add Student</h2>
+                <h6 class="modal-title">Add Student</h6>
                 <button class="close">&times;</button>
             </div>
             <div class="modal-body">
@@ -81,10 +86,21 @@
                     </div>
                     <input type="text" class="form-control" placeholder="The Age Student" aria-label="Age" aria-describedby="basic-addon4" id="age_create">
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" id="createBtn">Add</button>
-                <button class="btn btn-secondary" id="cancelBtn">Cancel</button>
+                <div class="form-group">
+                    <h6>Audio</h6>
+                    <progress value="0" max="100" id="createAudio">0%</progress>
+                    <input type="file" value="upload" accept=".jpg" id="audioButton" onclick="upIcon(document.getElementById('audioButton'), document.getElementById('createAudio'), '', 'audio')">
+                    <br>
+                    <br>
+                    <h6>Icon</h6>
+                    <progress value="0" max="100" id="uploaders">0%</progress>
+                    <input type="file" value="upload" accept=".jpg" id="fileButtons" onclick="upIcon(document.getElementById('fileButtons'), document.getElementById('uploaders'), 'images', '')">
+                    <img id="images" src="" alt="">
+                </div>
+                <div class="modal_footer">
+                    <button class="btn btn-primary" id="createBtn">Add</button>
+                    <button class="btn btn-secondary" id="cancelBtn">Cancel</button>
+                </div>
             </div>
         </div>
     </div>
@@ -93,7 +109,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">Update Student</h2>
+                <h6 class="modal-title">Update Student</h6>
                 <button class="close" id="closeUpdate">&times;</button>
             </div>
             <div class="modal-body">
@@ -124,10 +140,21 @@
                     </div>
                     <input type="text" class="form-control" placeholder="The Age Student" aria-label="Age" aria-describedby="basic-addon4" id="age_update">
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" id="updateBtn">Add</button>
-                <button class="btn btn-secondary" id="cancelUpdateBtn">Cancel</button>
+                <div class="form-group">
+                    <h6>Audio</h6>
+                    <progress value="0" max="100" id="updateAudio">0%</progress>
+                    <input type="file" value="upload" accept=".jpg" id="audioButtons" onclick="upIcon(document.getElementById('audioButtons'), document.getElementById('updateAudio'), '', 'audios')">
+                    <br>
+                    <br>
+                    <h6>Icon</h6>
+                    <progress value="0" max="100" id="uploaderss">0%</progress>
+                    <input type="file" value="upload" accept=".jpg" id="fileButtonss" onclick="upIcon(document.getElementById('fileButtonss'), document.getElementById('uploaderss'), 'imagess', '')">
+                    <img id="imagess" style="height: 50px; width: 50px" src="" alt="">
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" id="updateBtn">Add</button>
+                    <button class="btn btn-secondary" id="cancelUpdateBtn">Cancel</button>
+                </div>
             </div>
         </div>
     </div>
@@ -145,6 +172,32 @@
         </div>
     </div>
 </div>
+
+<div id="iconModal" class="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Icon</h2>
+                <button id="closeIcon">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label id="IconError" style="color: red"></label>
+                    <h6>Your Icon</h6>
+                    <progress value="0" max="100" id="uploader">0%</progress>
+                    <input type="file" value="upload" accept=".jpg" id="fileButton" onclick="upIcon(document.getElementById('fileButton'), document.getElementById('uploader'), 'image', '')">
+                    <div id="imgDiv"></div>
+                    <img id="image" src="" alt="">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="saveIcon">Save</button>
+                <button class="btn btn-secondary" id="cancelIcon">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div id="deleteModal" class="modal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -166,56 +219,70 @@
 <button style="background: #00ff0d; color: #ffffff; width: 50px" onclick="show_table()"><i class="fas fa-eye"></i></button>
 <button style="background: #ff0000; color: #ffffff; width: 50px" onclick="close_table()"><i class="fas fa-eye-slash"></i></button>
 <br>
-<table style="width: 1248px;">
+<br>
+<table style="width: 1269px;">
     <tr>
         <th style=" border: 2px solid mediumvioletred;
         padding: 1px;
         text-align: center;
-        width: 1248px;
+        width: 1269px;
         color: blue">STUDENT MANAGER</th>
     </tr>
 </table>
-<table style="width: 1248px;">
+<table style="width: 1269px;">
     <tr>
         <th style=" border: 2px solid black;
         padding: 1px;
-        width: 208px;
+        width: 141px;
         text-align: center;
         color: black">STT</th>
         <th style=" border: 2px solid black;
         padding: 1px;
         text-align: center;
-        width: 208px;
+        width: 141px;
         color: black">NAME</th>
         <th style=" border: 2px solid black;
         padding: 1px;
         text-align: center;
-        width: 208px;
+        width: 141px;
+        color: black">AVATAR</th>
+        <th style=" border: 2px solid black;
+        padding: 1px;
+        text-align: center;
+        width: 141px;
         color: black">ADDRESS</th>
         <th style=" border: 2px solid black;
         padding: 1px;
         text-align: center;
-        width: 208px;
+        width: 141px;
         color: black">AGE</th>
         <th style=" border: 2px solid black;
         padding: 1px;
         text-align: center;
-        width: 208px;
+        width: 310px;
+        color: black">AUDIO</th>
+        <th style=" border: 2px solid black;
+        padding: 1px;
+        text-align: center;
+        width: 141px;
         color: black">EDIT</th>
         <th style=" border: 2px solid black;
         padding: 1px;
         text-align: center;
-        width: 208px;
+        width: 141px;
         color: black">DELETE</th>
     </tr>
 </table>
-<table id="table" style="width: 1248px;">
+<table id="table" style="width: 1269px;">
 
 </table>
+
 <script src="Student.js"></script>
+<script src="upload.js"></script>
 <script>
 let dataStudent = JSON.parse(localStorage.getItem("data"))
 let dataUser = localStorage.getItem("username")
+
 document.getElementById('greeting').innerText = "Xin chào, " + dataUser
 let list_student = []
 if (dataStudent == null) {
@@ -231,21 +298,23 @@ let table = document.getElementById('table')
 let style2 = "border: 1px solid black;\n" +
     "        padding: 1px;\n" +
     "        text-align: center;\n" +
-    "        width: 208px;\n" +
+    "        width: 159px;\n" +
     "        color: black;\n" +
     "background: lightgrey"
 let style1 = "border: 1px solid black;\n" +
     "        padding: 1px;\n" +
     "        text-align: center;\n" +
-    "        width: 208px;\n" +
+    "        width: 159px;\n" +
     "        color: black"
 let modal = document.getElementById('create_modal')
 let error = document.getElementById('errorModal')
 let update = document.getElementById('update_modal')
 let deleteModal = document.getElementById('deleteModal')
+let icon = document.getElementById('iconModal')
 let closeModalBtn = document.getElementsByClassName("close")[0]
 let closeErrorBtn = document.getElementById("closeError")
 let closeUpdateBtn = document.getElementById("closeUpdate")
+let closeIconBtn = document.getElementById('closeIcon')
 closeModalBtn.onclick = function() {
     modal.style.display = "none";
 }
@@ -255,16 +324,43 @@ closeErrorBtn.onclick = function() {
 closeUpdateBtn.onclick = function () {
     update.style.display = "none"
 }
+closeIconBtn.onclick = function () {
+    icon.style.display = "none"
+}
 function add_student() {
     modal.style.display = "block"
 }
-
+document.getElementById('iconSet').onclick = function () {
+    icon.style.display = "block"
+    document.getElementById('cancelIcon').onclick = function () {
+        icon.style.display = "none"
+    }
+    document.getElementById('saveIcon').onclick = function () {
+        updateIcon = JSON.parse(localStorage.getItem("user"))
+        if (updateIcon !== null) {
+            for (let i = 0; i < updateIcon.length; i++) {
+                if (updateIcon[i].username === dataUser) {
+                    if (image !== '') {
+                        updateIcon[i].icon = image
+                        document.getElementById('iconSet').src = image
+                    }
+                    break
+                }
+            }
+            localStorage.setItem("user", JSON.stringify(updateIcon))
+        }
+        icon.style.display = "none"
+    }
+}
 document.getElementById('createBtn').onclick = function() {
     let id = document.getElementById('id_create').value
     let name = document.getElementById('name_create').value
     let address = document.getElementById('address_create').value
     let age = document.getElementById('age_create').value
-    let student = new Student(id, name, address, age)
+    let avatar = image.toString()
+    let audio = music.toString()
+    let student = new Student(id, name, address, age, avatar, audio)
+
     if (name % 1 !== 0 && address % 1 !== 0 && age !== "" && age % 1 === 0) {
         list_student.push(student)
         let data = JSON.stringify(list_student)
@@ -274,6 +370,10 @@ document.getElementById('createBtn').onclick = function() {
         document.getElementById('name_create').value = ""
         document.getElementById('address_create').value = ""
         document.getElementById('age_create').value = ""
+        document.getElementById('images').src = ""
+        document.getElementById('fileButtons').value = ""
+        document.getElementById('audio').src = ""
+        document.getElementById('audioButton').value = ""
     } else {
         error.style.display = "block"
         document.getElementById('textTitle').innerText = "Error"
@@ -294,20 +394,26 @@ function show_table() {
             let cell4 = newRow.insertCell(3);
             let cell5 = newRow.insertCell(4);
             let cell6 = newRow.insertCell(5);
+            let cell7 = newRow.insertCell(6);
+            let cell8 = newRow.insertCell(7);
             cell1.style = style1
             cell2.style = style1
             cell3.style = style1
             cell4.style = style1
             cell5.style = style1
             cell6.style = style1
+            cell7.style = style1
+            cell8.style = style1
             newRow.className="table-primary"
             console.log(list_student)
             cell1.innerHTML = list_student[i]._stt
             cell2.innerHTML = list_student[i]._name
-            cell3.innerHTML = list_student[i]._address
-            cell4.innerHTML = list_student[i]._age
-            cell5.innerHTML = '<button onclick="update_student(' + list_student[i]._stt + ')" style="background: blue; color: white"><i class="fas fa-pen"></i></button>'
-            cell6.innerHTML = '<button onclick="delete_student(' + list_student[i]._stt + ')" style="background: red; color: white"><i class="fas fa-trash"></i></button>'
+            cell3.innerHTML = '<img src="'+ list_student[i]._avatar + '" style="border-radius: 50%; width: 50px; height: 50px">'
+            cell4.innerHTML = list_student[i]._address
+            cell5.innerHTML = list_student[i]._age
+            cell6.innerHTML = '<audio id="audioControls" controls> <source id="audios" src="'+ list_student[i]._audio + '" type="audio/mpeg"> </audio>'
+            cell7.innerHTML = '<button onclick="update_student(' + list_student[i]._stt + ')" style="background: blue; color: white"><i class="fas fa-pen"></i></button>'
+            cell8.innerHTML = '<button onclick="delete_student(' + list_student[i]._stt + ')" style="background: red; color: white"><i class="fas fa-trash"></i></button>'
         }
         else {
             newRow = table.insertRow(table.rows.length)
@@ -317,19 +423,25 @@ function show_table() {
             let cell4 = newRow.insertCell(3);
             let cell5 = newRow.insertCell(4);
             let cell6 = newRow.insertCell(5);
+            let cell7 = newRow.insertCell(6);
+            let cell8 = newRow.insertCell(7);
             cell1.style = style2
             cell2.style = style2
             cell3.style = style2
             cell4.style = style2
             cell5.style = style2
             cell6.style = style2
+            cell7.style = style2
+            cell8.style = style2
             newRow.className="table-danger"
             cell1.innerHTML = list_student[i]._stt
             cell2.innerHTML = list_student[i]._name
-            cell3.innerHTML = list_student[i]._address
-            cell4.innerHTML = list_student[i]._age
-            cell5.innerHTML = '<button onclick="update_student(' + list_student[i]._stt + ')" style="background: blue; color: white"><i class="fas fa-pen"></i></button>'
-            cell6.innerHTML = '<button onclick="delete_student(' + list_student[i]._stt + ')" style="background: red; color: white"><i class="fas fa-trash"></i></button>'
+            cell3.innerHTML = '<img src="'+ list_student[i]._avatar + '" style="border-radius: 50%; width: 50px; height: 50px">'
+            cell4.innerHTML = list_student[i]._address
+            cell5.innerHTML = list_student[i]._age
+            cell6.innerHTML = '<audio id="audioControls" controls> <source id="audios" src="'+ list_student[i]._audio + '" type="audio/mpeg"> </audio>'
+            cell7.innerHTML = '<button onclick="update_student(' + list_student[i]._stt + ')" style="background: blue; color: white"><i class="fas fa-pen"></i></button>'
+            cell8.innerHTML = '<button onclick="delete_student(' + list_student[i]._stt + ')" style="background: red; color: white"><i class="fas fa-trash"></i></button>'
         }
     }
 }
@@ -337,75 +449,75 @@ function show_table() {
 function close_table() {
     table.innerHTML = ""
 }
-function search_name() {
-    let search = document.getElementById('search').value.toLowerCase()
-    let same = []
-    for (let i = 0; i < list_student.length; i++) {
-        if (list_student[i].name.toLowerCase().search(search) !== -1) {
-            same.push(list_student[i])
-        }
-    }
-    table.innerHTML = ""
-    for (let t = 0; t < same.length; t++) {
-        newRow = table.insertRow(table.rows.length)
-        let cell1 = newRow.insertCell(0);
-        let cell2 = newRow.insertCell(1);
-        let cell3 = newRow.insertCell(2);
-        let cell4 = newRow.insertCell(3);
-        let cell5 = newRow.insertCell(4);
-        let cell6 = newRow.insertCell(5);
-        cell1.style = style
-        cell2.style = style
-        cell3.style = style
-        cell4.style = style
-        cell5.style = style
-        cell6.style = style
-        cell1.innerHTML = same[t].id
-        cell2.innerHTML = same[t].name
-        cell3.innerHTML = same[t].address
-        cell4.innerHTML = same[t].age
-        cell5.innerHTML = '<button onclick="update_student(' + list_student[i].id + ')" style="background: blue; color: white"><i class="fas fa-pen"></i></button>'
-        cell6.innerHTML = '<button onclick="delete_student(' + list_student[i].id + ')" style="background: red; color: white"><i class="fas fa-trash"></i></button>'
-    }
-    document.getElementById('search').value = ""
-}
-function search_student() {
-    let search = document.getElementById('search').value.toLowerCase()
-    let same = []
-    let count = 0
-    for (let i = 0; i < list_student.length; i++) {
-        let name = list_student[i].name.toLowerCase()
-        for (let j = 0; j < search.length; j++) {
-            for (let k = 0; k < name.length; k++) {
-                if (search[j] === name[k]) {
-                    count++
-                    break
-                }
-            }
-        }
-        if (count === search.length) {
-            same.push(list_student[i])
-            count = 0
-        }
-    }
-    table.innerHTML = ""
-    for (let t = 0; t < same.length; t++) {
-        newRow = table.insertRow(table.rows.length)
-        let cell1 = newRow.insertCell(0);
-        let cell2 = newRow.insertCell(1);
-        let cell3 = newRow.insertCell(2);
-        let cell4 = newRow.insertCell(3);
-        cell1.style = style
-        cell2.style = style
-        cell3.style = style
-        cell4.style = style
-        cell1.innerHTML = same[t].id
-        cell2.innerHTML = same[t].name
-        cell3.innerHTML = '<button onclick="update_student(' + same[t].id + ')" style="background: blue; color: white">Edit</button>'
-        cell4.innerHTML = '<button onclick="delete_student(' + same[t].id + ')" style="background: red; color: white">Delete</button>'
-    }
-    document.getElementById('search').value = ""
-}
+// function search_name() {
+//     let search = document.getElementById('search').value.toLowerCase()
+//     let same = []
+//     for (let i = 0; i < list_student.length; i++) {
+//         if (list_student[i].name.toLowerCase().search(search) !== -1) {
+//             same.push(list_student[i])
+//         }
+//     }
+//     table.innerHTML = ""
+//     for (let t = 0; t < same.length; t++) {
+//         newRow = table.insertRow(table.rows.length)
+//         let cell1 = newRow.insertCell(0);
+//         let cell2 = newRow.insertCell(1);
+//         let cell3 = newRow.insertCell(2);
+//         let cell4 = newRow.insertCell(3);
+//         let cell5 = newRow.insertCell(4);
+//         let cell6 = newRow.insertCell(5);
+//         cell1.style = style
+//         cell2.style = style
+//         cell3.style = style
+//         cell4.style = style
+//         cell5.style = style
+//         cell6.style = style
+//         cell1.innerHTML = same[t].id
+//         cell2.innerHTML = same[t].name
+//         cell3.innerHTML = same[t].address
+//         cell4.innerHTML = same[t].age
+//         cell5.innerHTML = '<button onclick="update_student(' + list_student[i].id + ')" style="background: blue; color: white"><i class="fas fa-pen"></i></button>'
+//         cell6.innerHTML = '<button onclick="delete_student(' + list_student[i].id + ')" style="background: red; color: white"><i class="fas fa-trash"></i></button>'
+//     }
+//     document.getElementById('search').value = ""
+// }
+// function search_student() {
+//     let search = document.getElementById('search').value.toLowerCase()
+//     let same = []
+//     let count = 0
+//     for (let i = 0; i < list_student.length; i++) {
+//         let name = list_student[i].name.toLowerCase()
+//         for (let j = 0; j < search.length; j++) {
+//             for (let k = 0; k < name.length; k++) {
+//                 if (search[j] === name[k]) {
+//                     count++
+//                     break
+//                 }
+//             }
+//         }
+//         if (count === search.length) {
+//             same.push(list_student[i])
+//             count = 0
+//         }
+//     }
+//     table.innerHTML = ""
+//     for (let t = 0; t < same.length; t++) {
+//         newRow = table.insertRow(table.rows.length)
+//         let cell1 = newRow.insertCell(0);
+//         let cell2 = newRow.insertCell(1);
+//         let cell3 = newRow.insertCell(2);
+//         let cell4 = newRow.insertCell(3);
+//         cell1.style = style
+//         cell2.style = style
+//         cell3.style = style
+//         cell4.style = style
+//         cell1.innerHTML = same[t].id
+//         cell2.innerHTML = same[t].name
+//         cell3.innerHTML = '<button onclick="update_student(' + same[t].id + ')" style="background: blue; color: white">Edit</button>'
+//         cell4.innerHTML = '<button onclick="delete_student(' + same[t].id + ')" style="background: red; color: white">Delete</button>'
+//     }
+//     document.getElementById('search').value = ""
+// }
 function delete_student(id) {
     console.log(id)
     for (let i = 0; i < list_student.length; i++) {
@@ -439,12 +551,27 @@ function update_student(id) {
             document.getElementById('name_update').value = list_student[i]._name
             document.getElementById('address_update').value = list_student[i]._address
             document.getElementById('age_update').value = list_student[i]._age
+            document.getElementById('imagess').src = list_student[i]._avatar
+            
             update.style.display = "block"
             document.getElementById("updateBtn").onclick = function () {
                 let updateId = document.getElementById('id_update').value
                 let updateName = document.getElementById('name_update').value
                 let updateAddress = document.getElementById('address_update').value
                 let updateAge = document.getElementById('age_update').value
+                let updateIcon
+                let updateAudio
+                if (image !== '') {
+                    updateIcon = image
+                } else {
+                    updateIcon = list_student[i]._avatar
+                }
+                if (music !== '') {
+                    updateAudio = music
+                } else {
+                    updateAudio = list_student[i]._audio
+                }
+
                 if (updateName % 1 === 0 || updateAddress % 1 === 0 || updateAge % 1 !== 0) {
                     error.style.display = "block"
                     document.getElementById('textTitle').innerText = "Error"
@@ -452,7 +579,7 @@ function update_student(id) {
                 }
                 else {
                     for (let j = 0; j < list_student.length; j++) {
-                        if (updateName.toString() === list_student[j]._name.toString() && updateAddress.toString() === list_student[j]._address.toString() && updateAge.toString() === list_student[j]._age.toString() && updateId.toString() === list_student[j]._stt.toString()) {
+                        if (updateName.toString() === list_student[j]._name.toString() && updateAddress.toString() === list_student[j]._address.toString() && updateAge.toString() === list_student[j]._age.toString() && updateId.toString() === list_student[j]._stt.toString() && updateIcon.toString() === list_student[j]._avatar && updateAudio.toString() === list_student[j]._audio) {
                             error.style.display = "block"
                             document.getElementById('textTitle').innerText = "Error"
                             document.getElementById('textInfo').innerText = "The name is existed! Please try again!"
@@ -471,6 +598,8 @@ function update_student(id) {
                         list_student[i]._stt = updateId
                         list_student[i]._address = updateAddress
                         list_student[i]._age = updateAge
+                        list_student[i]._avatar = updateIcon
+                        list_student[i]._audio = updateAudio
                         let data = JSON.stringify(list_student)
                         localStorage.setItem("data", data)
                         show_table()
@@ -483,6 +612,9 @@ function update_student(id) {
         }
     }
 }
+window.addEventListener("beforeunload", function(event) {
+    localStorage.setItem("icon", document.getElementById('icon').src)
+});
 
 </script>
 </body>

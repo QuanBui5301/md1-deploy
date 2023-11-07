@@ -75,7 +75,8 @@
                     document.getElementById('email').value = ""
                     document.getElementById('password').value = ""
                     localStorage.setItem("username", list_user[i].username)
-                    window.location.href = "CrudStudent.html"
+                    localStorage.setItem("icon", list_user[i].icon)
+                    window.location.href = "index.html"
                 }
                 if (i === list_user.length-1) {
                     document.getElementById("Error").innerText = "Login information is incorrect"

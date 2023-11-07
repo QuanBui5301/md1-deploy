@@ -1,9 +1,11 @@
 class Student {
-    constructor(stt, name, address, age) {
+    constructor(stt, name, address, age, avatar, audio) {
         this._stt = stt;
         this._name = name;
         this._address = address;
         this._age = age;
+        this._avatar = avatar;
+        this._audio = audio;
     }
 
 
@@ -37,5 +39,21 @@ class Student {
 
     set age(value) {
         this._age = value;
+    }
+
+    get avatar() {
+        return this._avatar;
+    }
+
+    set avatar(value) {
+        this._avatar = value;
+    }
+
+    get audio() {
+        return this._audio;
+    }
+
+    set audio(value) {
+        this._audio = value;
     }
 }

@@ -8,13 +8,12 @@
 <link href="note.css" rel="stylesheet" id="bootstrap-css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
+<script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
 <div class="container register-form">
   <div class="form">
     <div class="note">
       <h1>Register</h1>
     </div>
-
     <div class="form-content">
       <div class="row">
         <div class="col-md-6">
@@ -37,15 +36,26 @@
             <input type="password" class="form-control" placeholder="Confirm Password *" value="" id="re-password"/>
           </div>
         </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label id="IconError" style="color: red"></label>
+            <h6>Your Icon</h6>
+            <progress value="0" max="100" id="uploader">0%</progress>
+            <input type="file" value="upload" accept=".jpg" id="fileButton">
+            <div id="imgDiv"></div>
+            <img id="image" src="" alt="">
+          </div>
+        </div>
       </div>
       <button type="button" class="btnSubmit" id="btnSubmit" disabled>Submit</button>
     </div>
   </div>
 </div>
+<script src="upload.js"></script>
 <script src="User.js"></script>
 <script>
-  let key = ["username", "email", "password", "re-password"]
-  let keyLabel = ["NameError", "EmailError", "PassError", "RepassError"]
+  let key = ["username", "email", "password", "re-password", "fileButton"]
+  let keyLabel = ["NameError", "EmailError", "PassError", "RepassError", "IconError"]
   let dataUser = JSON.parse(localStorage.getItem("user"))
   let list_user = []
   if (dataUser == null) {
@@ -99,7 +109,7 @@
         }
       }
     }
-    if (document.getElementById(keyLabel[0]).innerText === "" && document.getElementById(keyLabel[1]).innerText === "" && document.getElementById(keyLabel[2]).innerText === "" && document.getElementById(keyLabel[3]).innerText === "") {
+    if (document.getElementById(keyLabel[0]).innerText === "" && document.getElementById(keyLabel[1]).innerText === "" && document.getElementById(keyLabel[2]).innerText === "" && document.getElementById(keyLabel[3]).innerText === "" && document.getElementById(keyLabel[4]).innerText === "") {
       document.getElementById('btnSubmit').disabled = false
     }
     else {
@@ -111,7 +121,8 @@
       let username = document.getElementById('username').value
       let email = document.getElementById('email').value
       let password = document.getElementById('password').value
-      let user = new User(username, email, password)
+      let icon = image.toString()
+      let user = new User(username, email, password, icon)
       list_user.push(user)
       localStorage.setItem("user", JSON.stringify(list_user))
       document.getElementById('username').value = ""
