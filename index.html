@@ -64,10 +64,10 @@
         document.getElementById("iconSet").src = localStorage.getItem("icon")
     </script>
         <h1>&nbsp;</h1>
-        <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
+        <div class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="text" id="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" onclick="search_name()">Search</button>
+        </div>
     </div>
 </nav>
 <br>
@@ -196,23 +196,6 @@
     </div>
 </div>
 
-<div id="searchModal" class="modal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">Search</h2>
-                <button id="closeSearch">&times;</button>
-            </div>
-            <div class="modal-body">
-                <input type="text" placeholder="Search key" id="search">
-            </div>
-            <div class="modal-footer">
-                <button id="searchButton" class="btn btn-primary">Search</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div id="iconModal" class="modal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -255,7 +238,6 @@
     </div>
 </div>
 <!--<input type="text" id="search" style="width: 500px" placeholder="Search Student">-->
-<button style="background: deepskyblue; color: brown; width: 50px" onclick="search_name()"><i class="fas fa-search"></i></button>
 <button style="background: #00ff0d; color: #ffffff; width: 50px" onclick="show_table(list_student.slice(0,3))"><i class="fas fa-eye"></i></button>
 <button style="background: #ff0000; color: #ffffff; width: 50px" onclick="close_table()"><i class="fas fa-eye-slash"></i></button>
 <br>
@@ -353,7 +335,6 @@ let style1 = "border: 1px solid black;\n" +
     "        width: 159px;\n" +
     "        color: black"
 let modal = document.getElementById('create_modal')
-let search = document.getElementById('searchModal')
 let error = document.getElementById('errorModal')
 let update = document.getElementById('update_modal')
 let deleteModal = document.getElementById('deleteModal')
@@ -362,7 +343,6 @@ let closeModalBtn = document.getElementsByClassName("close")[0]
 let closeErrorBtn = document.getElementById("closeError")
 let closeUpdateBtn = document.getElementById("closeUpdate")
 let closeIconBtn = document.getElementById('closeIcon')
-let closeSearchBtn = document.getElementById('closeSearch')
 closeModalBtn.onclick = function() {
     modal.style.display = "none";
 }
@@ -374,9 +354,6 @@ closeUpdateBtn.onclick = function () {
 }
 closeIconBtn.onclick = function () {
     icon.style.display = "none"
-}
-closeSearchBtn.onclick = function () {
-    search.style.display = "none"
 }
 let elementPerPage = 3;
 let start = 0
@@ -449,7 +426,6 @@ document.getElementById('createBtn').onclick = function() {
         document.getElementById('age_create').value = ""
         document.getElementById('images').src = ""
         document.getElementById('fileButtons').value = ""
-        document.getElementById('audio').src = ""
         document.getElementById('audioButton').value = ""
     } else {
         error.style.display = "block"
@@ -527,8 +503,6 @@ function close_table() {
     table.innerHTML = ""
 }
 function search_name() {
-    search.style.display = "block"
-    document.getElementById('searchButton').onclick = function () {
         let searchKey = document.getElementById('search').value.toLowerCase()
         let same = []
         for (let i = 0; i < list_student.length; i++) {
@@ -551,7 +525,6 @@ function search_name() {
         table.innerHTML = ""
         show_table(same)
         document.getElementById('search').value = ""
-    }
 }
 function delete_student(id) {
     console.log(id)
