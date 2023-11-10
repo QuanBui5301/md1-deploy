@@ -9,6 +9,18 @@
 </head>
 <body style="text-align: center">
 <style>
+    .column {
+        width: 33%;
+        padding: 10px;
+        text-align: center;
+    }
+    .card {
+        box-shadow: 10px 10px 2px 1px #a2cfff;
+        background-color: #007bff;
+        padding: 10px;
+        color: white;
+        text-align: center;
+    }
     .buttons {
         margin-top: 30px;
         display: flex;
@@ -238,6 +250,7 @@
     </div>
 </div>
 <!--<input type="text" id="search" style="width: 500px" placeholder="Search Student">-->
+<button id="setType" style="background: #ffdd00; color: #ffffff; width: 50px; height: 30px" onclick="typeView()" class="fas fa-table"></button>
 <button style="background: #00ff0d; color: #ffffff; width: 50px" onclick="show_table(list_student.slice(0,3))"><i class="fas fa-eye"></i></button>
 <button style="background: #ff0000; color: #ffffff; width: 50px" onclick="close_table()"><i class="fas fa-eye-slash"></i></button>
 <br>
@@ -298,6 +311,11 @@
 <table id="table" style="width: 1269px;">
 
 </table>
+<div class="col-12" style="margin-top: 50px">
+    <div class="row" id="rows">
+
+    </div>
+</div>
 <br>
 <br>
 <div class="buttons">
@@ -310,7 +328,7 @@
 <script>
 let dataStudent = JSON.parse(localStorage.getItem("data"))
 let dataUser = localStorage.getItem("username")
-
+let type = true
 document.getElementById('greeting').innerText = "Xin chào, " + dataUser
 let list_student = []
 if (dataStudent == null) {
@@ -359,6 +377,17 @@ let elementPerPage = 3;
 let start = 0
 let end = 3
 let pageNumber = 1
+function typeView() {
+    if (type) {
+        type = false
+        document.getElementById('setType').className = "fas fa-list"
+        show_table(list_student.slice(start,end))
+    } else {
+        type = true
+        document.getElementById('setType').className = "fas fa-table"
+        show_table(list_student.slice(start,end))
+    }
+}
 function nextPage() {
     if (end < list_student.length) {
         start += elementPerPage
@@ -437,70 +466,85 @@ document.getElementById('cancelBtn').onclick = function() {
     modal.style.display = "none"
 }
 function show_table(list) {
+    document.getElementById('rows').innerHTML = ""
     table.innerHTML = ""
-    for (let i = 0; i < list.length; i++) {
-        if (i%2===0) {
-            newRow = table.insertRow(table.rows.length)
-            let cell1 = newRow.insertCell(0);
-            let cell2 = newRow.insertCell(1);
-            let cell3 = newRow.insertCell(2);
-            let cell4 = newRow.insertCell(3);
-            let cell5 = newRow.insertCell(4);
-            let cell6 = newRow.insertCell(5);
-            let cell7 = newRow.insertCell(6);
-            let cell8 = newRow.insertCell(7);
-            cell1.style = style1
-            cell2.style = style1
-            cell3.style = style1
-            cell4.style = style1
-            cell5.style = style1
-            cell6.style = style1
-            cell7.style = style1
-            cell8.style = style1
-            newRow.className="table-primary"
-            console.log(list_student)
-            cell1.innerHTML = list[i]._stt
-            cell2.innerHTML = list[i]._name
-            cell3.innerHTML = '<img src="'+ list[i]._avatar + '" style="border-radius: 50%; width: 50px; height: 50px">'
-            cell4.innerHTML = list[i]._address
-            cell5.innerHTML = list[i]._age
-            cell6.innerHTML = '<audio id="audioControls" controls> <source id="audios" src="'+ list[i]._audio + '" type="audio/mpeg"> </audio>'
-            cell7.innerHTML = '<button onclick="update_student(' + list[i]._stt + ')" style="background: blue; color: white"><i class="fas fa-pen"></i></button>'
-            cell8.innerHTML = '<button onclick="delete_student(' + list[i]._stt + ')" style="background: red; color: white"><i class="fas fa-trash"></i></button>'
+    if (type === true) {
+        for (let i = 0; i < list.length; i++) {
+            if (i%2===0) {
+                newRow = table.insertRow(table.rows.length)
+                let cell1 = newRow.insertCell(0);
+                let cell2 = newRow.insertCell(1);
+                let cell3 = newRow.insertCell(2);
+                let cell4 = newRow.insertCell(3);
+                let cell5 = newRow.insertCell(4);
+                let cell6 = newRow.insertCell(5);
+                let cell7 = newRow.insertCell(6);
+                let cell8 = newRow.insertCell(7);
+                cell1.style = style1
+                cell2.style = style1
+                cell3.style = style1
+                cell4.style = style1
+                cell5.style = style1
+                cell6.style = style1
+                cell7.style = style1
+                cell8.style = style1
+                newRow.className="table-primary"
+                console.log(list_student)
+                cell1.innerHTML = list[i]._stt
+                cell2.innerHTML = list[i]._name
+                cell3.innerHTML = '<img src="'+ list[i]._avatar + '" style="border-radius: 50%; width: 50px; height: 50px">'
+                cell4.innerHTML = list[i]._address
+                cell5.innerHTML = list[i]._age
+                cell6.innerHTML = '<audio id="audioControls" controls> <source id="audios" src="'+ list[i]._audio + '" type="audio/mpeg"> </audio>'
+                cell7.innerHTML = '<button onclick="update_student(' + list[i]._stt + ')" style="background: blue; color: white"><i class="fas fa-pen"></i></button>'
+                cell8.innerHTML = '<button onclick="delete_student(' + list[i]._stt + ')" style="background: red; color: white"><i class="fas fa-trash"></i></button>'
+            }
+            else {
+                newRow = table.insertRow(table.rows.length)
+                let cell1 = newRow.insertCell(0);
+                let cell2 = newRow.insertCell(1);
+                let cell3 = newRow.insertCell(2);
+                let cell4 = newRow.insertCell(3);
+                let cell5 = newRow.insertCell(4);
+                let cell6 = newRow.insertCell(5);
+                let cell7 = newRow.insertCell(6);
+                let cell8 = newRow.insertCell(7);
+                cell1.style = style2
+                cell2.style = style2
+                cell3.style = style2
+                cell4.style = style2
+                cell5.style = style2
+                cell6.style = style2
+                cell7.style = style2
+                cell8.style = style2
+                newRow.className="table-danger"
+                cell1.innerHTML = list[i]._stt
+                cell2.innerHTML = list[i]._name
+                cell3.innerHTML = '<img src="'+ list[i]._avatar + '" style="border-radius: 50%; width: 50px; height: 50px">'
+                cell4.innerHTML = list[i]._address
+                cell5.innerHTML = list[i]._age
+                cell6.innerHTML = '<audio id="audioControls" controls> <source id="audios" src="'+ list[i]._audio + '" type="audio/mpeg"> </audio>'
+                cell7.innerHTML = '<button onclick="update_student(' + list[i]._stt + ')" style="background: blue; color: white"><i class="fas fa-pen"></i></button>'
+                cell8.innerHTML = '<button onclick="delete_student(' + list[i]._stt + ')" style="background: red; color: white"><i class="fas fa-trash"></i></button>'
+            }
         }
-        else {
-            newRow = table.insertRow(table.rows.length)
-            let cell1 = newRow.insertCell(0);
-            let cell2 = newRow.insertCell(1);
-            let cell3 = newRow.insertCell(2);
-            let cell4 = newRow.insertCell(3);
-            let cell5 = newRow.insertCell(4);
-            let cell6 = newRow.insertCell(5);
-            let cell7 = newRow.insertCell(6);
-            let cell8 = newRow.insertCell(7);
-            cell1.style = style2
-            cell2.style = style2
-            cell3.style = style2
-            cell4.style = style2
-            cell5.style = style2
-            cell6.style = style2
-            cell7.style = style2
-            cell8.style = style2
-            newRow.className="table-danger"
-            cell1.innerHTML = list[i]._stt
-            cell2.innerHTML = list[i]._name
-            cell3.innerHTML = '<img src="'+ list[i]._avatar + '" style="border-radius: 50%; width: 50px; height: 50px">'
-            cell4.innerHTML = list[i]._address
-            cell5.innerHTML = list[i]._age
-            cell6.innerHTML = '<audio id="audioControls" controls> <source id="audios" src="'+ list[i]._audio + '" type="audio/mpeg"> </audio>'
-            cell7.innerHTML = '<button onclick="update_student(' + list[i]._stt + ')" style="background: blue; color: white"><i class="fas fa-pen"></i></button>'
-            cell8.innerHTML = '<button onclick="delete_student(' + list[i]._stt + ')" style="background: red; color: white"><i class="fas fa-trash"></i></button>'
-        }
+    } else {
+        const pageStudent = list.map((row) => {
+            return '            <div class="column">\n' +
+                '                <div class="card">\n' +
+                '                    <p>Id: '+ row._stt +'</p>\n' +
+                '                    <img src="'+ row._avatar + '" style="height: 100px; width: 100px; border-radius: 50%; align-self: center">\n' +
+                '                    <p>'+ row._name  + '</p>\n' +
+                '                </div>\n' +
+                '            </div>'
+        }).join('')
+        document.getElementById('rows').innerHTML = pageStudent
     }
 }
 
 function close_table() {
     table.innerHTML = ""
+    document.getElementById('rows').innerHTML = ""
 }
 function search_name() {
         let searchKey = document.getElementById('search').value.toLowerCase()
