@@ -534,6 +534,7 @@ function show_table(list) {
                 '                <div class="card">\n' +
                 '                    <p>Id: '+ row._stt +'</p>\n' +
                 '                    <img src="'+ row._avatar + '" style="height: 100px; width: 100px; border-radius: 50%; align-self: center">\n' +
+                '<audio id="audioControls" style="align-self: center" controls> <source id="audios" src="'+ row._audio + '" type="audio/mpeg"> </audio>\n' +
                 '                    <p>'+ row._name  + '</p>\n' +
                 '                </div>\n' +
                 '            </div>'
@@ -546,6 +547,9 @@ function close_table() {
     table.innerHTML = ""
     document.getElementById('rows').innerHTML = ""
 }
+document.getElementById('search').addEventListener('input', async function (e) {
+    search_name()
+})
 function search_name() {
         let searchKey = document.getElementById('search').value.toLowerCase()
         let same = []
@@ -568,7 +572,7 @@ function search_name() {
         }
         table.innerHTML = ""
         show_table(same)
-        document.getElementById('search').value = ""
+        // document.getElementById('search').value = ""
 }
 function delete_student(id) {
     console.log(id)
